@@ -15,7 +15,6 @@ import AuthorizationCodeGrant from './AuthorizationCodeGrant';
 import AccessTokenGrant from './AccessTokenGrant';
 import RedirectNavigator from './RedirectNavigator';
 import RefreshTokenService from './RefreshTokenService';
-import RefreshTokenGrant from './RefreshTokenGrant';
 
 Log.logger = console;
 Log.level = 4;
@@ -92,7 +91,15 @@ export default class Client {
         const accessToken = await this.loadAccessToken();
         if (accessToken) {
             if (accessToken.refresh_token) {
-                return this.refreshTokenService.refresh(accessToken);
+                let refresh_token = await this.refreshTokenService.refresh(
+                    accessToken
+                );
+                const updatedAccessToken = await this.validator.validateRefreshResponse(
+                    accessToken,
+                    refresh_token
+                );
+                await this.storeAccessToken(updatedAccessToken);
+                return updatedAccessToken;
             } else {
                 Log.debug(`Client.refresh no refresh token.`);
                 return Promise.reject(`Client.refresh no refresh token.`);

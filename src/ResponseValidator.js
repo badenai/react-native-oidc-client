@@ -51,14 +51,30 @@ export default class ResponseValidator {
 
     async validateRefreshResponse(accessToken, response) {
         Log.debug(`ResponseValidator.validateRefreshResponse`);
+        if (!response.access_token) {
+            Log.debug(
+                `ResponseValidator.validateRefreshResponse no access_token in refresh response.`
+            );
+            Promise.reject(
+                new Error(
+                    `ResponseValidator.validateRefreshResponse no access_token in refresh response.`
+                )
+            );
+        }
+        // check if the id_token is not malformed
         if (response.id_token) {
             const id_token = JoseUtil.parseJwt(response.id_token).payload;
-            const isValid = this.compareIdToken(accessToken.profile, id_token);
-
+            await this.compareIdToken(accessToken.profile, id_token);
         }
+
+        if (response.refresh_token) {
+            accessToken.refresh_token = response.refresh_token;
+        }
+        accessToken.access_token = response.access_token;
+        return accessToken;
     }
 
-    compareIdToken(ref, token) {
+    async compareIdToken(ref, token) {
         if (ref.iss !== token.iss) {
             return Promise.reject(
                 new Error(`ResponseValidator.compareIdToken iss mismatch 
@@ -95,12 +111,12 @@ export default class ResponseValidator {
                 (${ref.azp} !== ${token.azp})`)
             );
         }
-        return Promise.resolve(true);
+        return Promise.resolve();
     }
 
     validateSignoutResponse(state, response) {
         Log.debug('ResponseValidator.validateSignoutResponse');
-        return Promise.reject('HELLOOOO');
+
         if (state.id !== response.state) {
             Log.error('State does not match');
             return Promise.reject(new Error('State does not match'));
@@ -122,7 +138,6 @@ export default class ResponseValidator {
 
     _processAuthorizationParams(state, response) {
         Log.debug('ResponseValidator._processAuthorizationParams');
-
         if (
             // It is not necessary to check the state for the authorization code flow
             // again. We did that already.

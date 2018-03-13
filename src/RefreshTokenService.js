@@ -11,7 +11,6 @@ export default class RefreshTokenService {
         await refreshTokenGrant.prepare(accessToken.refresh_token);
         const responseJSON = await refreshTokenGrant.request();
         const response = await responseJSON.json();
-        console.log('DEBUG TODO: validate response', response);
         return response;
     }
 
