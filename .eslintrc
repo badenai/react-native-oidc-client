@@ -1,0 +1,47 @@
+// Use this file as a starting point for your project's .eslintrc.
+// Copy this file, and add rule overrides as needed.
+{
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "parser": "babel-eslint",
+  "plugins": [
+    "react",
+    "prettier"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "prettier",
+    "prettier/react"
+  ],
+  "ecmaFeatures": {
+  	"classes": true
+  },
+  "rules": {
+  	"react/jsx-filename-extension": ["error", { "extensions": [".js", ".jsx"] }],
+  	"global-require": "off",
+
+    // Used for debugging
+    "no-console": "off",
+
+    // Because we're using directory aliases eg. @component, @config
+    "import/no-extraneous-dependencies": "off",
+    "import/extensions": "off",
+    "import/no-unresolved": "off",
+
+    "linebreak-style": ["warn", "unix"],
+    "max-len": ["warn", 120],
+
+    "prettier/prettier": ["error", {
+      "singleQuote": true,
+      "trailingComma": "es5",
+      "bracketSpacing": true,
+      "tabWidth": 4,
+      "printWidth": 80
+    }]
+  }
+}
