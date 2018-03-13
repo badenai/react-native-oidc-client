@@ -34,7 +34,7 @@ export default class Config {
         acr_values,
         resource,
         // behavior flags
-        filterProtocolClaims = true,
+        filterProtocolClaims = false,
         loadUserInfo = true,
         staleStateAge = DefaultStaleStateAge,
         clockSkew = DefaultClockSkewInSeconds,
