@@ -1,9 +1,4 @@
-// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-import UrlUtility from './UrlUtility';
 import Log from './Log';
-import User from './User';
 
 const OidcScope = 'openid';
 
@@ -20,7 +15,7 @@ export default class AccessToken {
         this.refresh_token = values.refresh_token;
         this.token_type = values.token_type;
         this.scope = values.scope;
-        this.profile = undefined; // will be set from ResponseValidator
+        this.profile = values.profile; // will be set from ResponseValidator
 
         let expires_in = parseInt(values.expires_in);
         if (typeof expires_in === 'number' && expires_in > 0) {

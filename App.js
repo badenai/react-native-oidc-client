@@ -33,32 +33,32 @@ export default class App extends Component<Props> {
         Global.localStorage = AsyncStorage;
         // const auth_endpoint ='http://vm-plm-elite.contact.de:80/oidc/authorization';
 
-        const config = {
-            response_type: 'code',
-            scope: 'openid profile offline_access',
-            client_id: 'd8ictrp81Ewv',
-            client_secret:
-                '612d658e6b93ab3729edf4304deb53d55e4e3979f59f126a881bd701',
-            redirect_uri: 'https://com.reactnativeoidcclient',
-            acr_values: 'http://oidc.contact.de',
-            acr: 'default',
-            prompt: 'consent login',
-            authority: 'http://vm-plm-elite.contact.de:80/oidc',
-            loadUserInfo: false,
-        };
         // const config = {
         //     response_type: 'code',
-        //     scope: 'openid',
-        //     client_id:
-        //         '817116679875-jobppm3n1qvpr7im7fa83c2vn7561d1q.apps.googleusercontent.com',
-        //     redirect_uri:
-        //         'com.googleusercontent.apps.817116679875-jobppm3n1qvpr7im7fa83c2vn7561d1q:/oauth2redirect/google',
-        //     // authorizationEndpoint: auth_endpoint,
-        //     authority: 'https://accounts.google.com',
-        //     // extraQueryParams: {
-        //     //     access_type: 'offline',
-        //     // },
+        //     scope: 'openid profile offline_access',
+        //     client_id: 'd8ictrp81Ewv',
+        //     client_secret:
+        //         '612d658e6b93ab3729edf4304deb53d55e4e3979f59f126a881bd701',
+        //     redirect_uri: 'https://com.reactnativeoidcclient',
+        //     acr_values: 'http://oidc.contact.de',
+        //     acr: 'default',
+        //     prompt: 'consent login',
+        //     authority: 'http://vm-plm-elite.contact.de:80/oidc',
+        //     loadUserInfo: false,
         // };
+        const config = {
+            response_type: 'code',
+            scope: 'openid',
+            client_id:
+                '817116679875-jobppm3n1qvpr7im7fa83c2vn7561d1q.apps.googleusercontent.com',
+            redirect_uri:
+                'com.googleusercontent.apps.817116679875-jobppm3n1qvpr7im7fa83c2vn7561d1q:/oauth2redirect/google',
+            // authorizationEndpoint: auth_endpoint,
+            authority: 'https://accounts.google.com',
+            // extraQueryParams: {
+            //     access_type: 'offline',
+            // },
+        };
         const client = new Client(config);
         const response = await client.authorize();
         console.log('THIS SHOULD HAPPEN LAST.', response);

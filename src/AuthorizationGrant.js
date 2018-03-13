@@ -2,8 +2,6 @@ import Log from './Log';
 
 export default class AuthorizationGrant {
     constructor(config) {
-        Log.debug('create AuthorizationGrant');
-
         this.config = config;
     }
 
