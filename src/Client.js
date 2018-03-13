@@ -172,7 +172,6 @@ export default class Client {
                 Log.error('Invalid state.');
                 return reject(new Error('Invalid state.'));
             }
-            console.log('ACCESS TOKEN: ', accessToken);
             return this.waitForAuthorization(accessToken);
         });
     }
@@ -211,6 +210,7 @@ export default class Client {
     async storePersistent() {
         this.stateStore.storeClientConfiguration(this.config);
     }
+
     static async restoreFromPersistent() {
         const store = new StateStore();
         const config = await store.restoreClientConfiguration();

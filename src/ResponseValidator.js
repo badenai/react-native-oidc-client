@@ -21,17 +21,17 @@ const ProtocolClaims = [
 
 export default class ResponseValidator {
     constructor(
-        settings,
+        config,
         MetadataServiceCtor = MetadataService,
         UserInfoServiceCtor = UserInfoService,
         joseUtil = JoseUtil
     ) {
-        if (!settings) {
+        if (!config) {
             Log.error('No config passed to ResponseValidator');
             throw new Error('settings');
         }
 
-        this._config = settings;
+        this._config = config;
         this._metadataService = new MetadataServiceCtor(this._config);
         this._userInfoService = new UserInfoServiceCtor(this._config);
         this._joseUtil = joseUtil;
@@ -49,9 +49,58 @@ export default class ResponseValidator {
         return response;
     }
 
+    async validateRefreshResponse(accessToken, response) {
+        Log.debug(`ResponseValidator.validateRefreshResponse`);
+        if (response.id_token) {
+            const id_token = JoseUtil.parseJwt(response.id_token).payload;
+            const isValid = this.compareIdToken(accessToken.profile, id_token);
+
+        }
+    }
+
+    compareIdToken(ref, token) {
+        if (ref.iss !== token.iss) {
+            return Promise.reject(
+                new Error(`ResponseValidator.compareIdToken iss mismatch 
+                (${ref.iss} !== ${token.iss})`)
+            );
+        }
+        if (ref.sub !== token.sub) {
+            return Promise.reject(
+                new Error(`ResponseValidator.compareIdToken sub mismatch 
+                (${ref.sub} !== ${token.sub})`)
+            );
+        }
+        if (ref.iat !== token.iat) {
+            return Promise.reject(
+                new Error(`ResponseValidator.compareIdToken iat mismatch 
+                (${ref.iat} !== ${token.iat})`)
+            );
+        }
+        if (JSON.stringify(ref.aud) !== JSON.stringify(token.aud)) {
+            return Promise.reject(
+                new Error(`ResponseValidator.compareIdToken aud mismatch 
+                (${ref.aud} !== ${token.aud})`)
+            );
+        }
+        if (ref.auth_time !== token.auth_time) {
+            return Promise.reject(
+                new Error(`ResponseValidator.compareIdToken auth_time mismatch 
+                (${ref.auth_time} !== ${token.auth_time})`)
+            );
+        }
+        if (ref.azp !== token.azp) {
+            return Promise.reject(
+                new Error(`ResponseValidator.compareIdToken azp mismatch 
+                (${ref.azp} !== ${token.azp})`)
+            );
+        }
+        return Promise.resolve(true);
+    }
+
     validateSignoutResponse(state, response) {
         Log.debug('ResponseValidator.validateSignoutResponse');
-
+        return Promise.reject('HELLOOOO');
         if (state.id !== response.state) {
             Log.error('State does not match');
             return Promise.reject(new Error('State does not match'));

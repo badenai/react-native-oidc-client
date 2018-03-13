@@ -1,5 +1,4 @@
 import Log from './Log';
-import Global from './Global';
 import RefreshTokenGrant from './RefreshTokenGrant';
 
 export default class RefreshTokenService {
@@ -10,7 +9,8 @@ export default class RefreshTokenService {
     async refresh(accessToken) {
         const refreshTokenGrant = new RefreshTokenGrant(this.config);
         await refreshTokenGrant.prepare(accessToken.refresh_token);
-        const response = await refreshTokenGrant.request();
+        const responseJSON = await refreshTokenGrant.request();
+        const response = await responseJSON.json();
         console.log('DEBUG TODO: validate response', response);
         return response;
     }
