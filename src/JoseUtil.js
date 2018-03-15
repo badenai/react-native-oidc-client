@@ -17,6 +17,16 @@ const AllowedSigningAlgs = [
 ];
 
 export default class JoseUtil {
+    static generateHMACJwt(payload, secret) {
+        const header = { alg: 'HS256' };
+        return jws.JWS.sign(
+            null,
+            JSON.stringify(header),
+            JSON.stringify(payload),
+            { utf8: secret }
+        );
+    }
+
     static parseJwt(jwt) {
         Log.debug('JoseUtil.parseJwt');
         try {
