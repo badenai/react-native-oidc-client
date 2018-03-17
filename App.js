@@ -34,22 +34,22 @@ export default class App extends Component<Props> {
         // const auth_endpoint ="http://vm-plm-elite.contact.de:80/oidc/authorization";
 
         const config = {
-            response_type: "code",
+            response_type: "id_token token",
             scope: "openid profile offline_access",
-            client_id: "d8ictrp81Ewv",
+            client_id: "XsTG8yZCxZLT",
             client_secret:
-                "612d658e6b93ab3729edf4304deb53d55e4e3979f59f126a881bd701",
+                "1a7fcf2d0de3ee6a10bac0bdad3a85b7810184a4fbf52daed89da3e4",
             redirect_uri: "https://com.reactnativeoidcclient",
             acr_values: "http://oidc.contact.de",
             acr: "default",
             prompt: "consent login",
-            authority: "http://vm-plm-elite.contact.de:80/oidc",
+            authority: "http://con-023.contact.de:80/oidc",
             loadUserInfo: false,
         };
 
-        // const client = new Client(config);
-        // const response = await client.authorize();
-        // console.log("THIS SHOULD HAPPEN LAST.", response);
+        const client = new Client(config);
+        const response = await client.authorize();
+        console.log("THIS SHOULD HAPPEN LAST.", response);
         // await client.refresh();
         // await client.endSession(response.id_token);
         // console.log("REQUEST", r);
@@ -58,7 +58,7 @@ export default class App extends Component<Props> {
         // console.log("METADDATA FROM STORE:", item2);
         // const newClient = await Client.restore();
         // console.log("RESOTRED CLIENT:", newClient)
-        this.jsSign();
+        // this.jsSign();
     };
 
     jsSign() {

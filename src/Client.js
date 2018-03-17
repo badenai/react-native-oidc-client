@@ -15,6 +15,7 @@ import AuthorizationCodeGrant from './AuthorizationCodeGrant';
 import AccessTokenGrant from './AccessTokenGrant';
 import RedirectNavigator from './RedirectNavigator';
 import RefreshTokenService from './RefreshTokenService';
+import ImplicitGrant from './ImplicitGrant';
 
 Log.logger = console;
 Log.level = 4;
@@ -72,9 +73,10 @@ export default class Client {
         } else if (
             authorizationCodeFlow === Global.AUTHORIZATION_FLOWS.IMPLICIT
         ) {
-            throw new Error(
-                `Client.authorize Implicit flow is currently not supported.`
-            );
+            this.implicitGrant();
+            return new Promise(resolve => {
+                this.waitForAuthorization = resolve;
+            });
         } else if (
             authorizationCodeFlow ===
             Global.AUTHORIZATION_FLOWS.CLIENT_CREDENTIAL
@@ -119,11 +121,23 @@ export default class Client {
         return authorizationCodeGrant.request();
     }
 
+    async implicitGrant() {
+        Log.debug(`Client.implicitGrant`);
+        const implicitGrant = new ImplicitGrant(this.config);
+        await implicitGrant.prepare();
+        Log.debug(`Call authorize with ${implicitGrant.url}`);
+        await this.store();
+        return implicitGrant.request();
+    }
+
     handleRedirect(url) {
         return new Promise(async (resolve, reject) => {
             Log.debug(`Client.handleResponse response url ${url}`);
             let accessToken;
             const values = UrlUtility.parseUrlFragment(url, '?');
+
+            // this checks the state value of the response
+            // if this fails the request state does not match the response state
             const authorizationStateString = await this.stateStore.remove(
                 values.state
             );
@@ -163,8 +177,9 @@ export default class Client {
                     authorizationState.authorization_flow ===
                     Global.AUTHORIZATION_FLOWS.IMPLICIT
                 ) {
-                    throw Error(
-                        `Client.handleRedirect Implicit flow is currently not supported.`
+                    accessToken = await this.handleAccessTokenResponse(
+                        authorizationState,
+                        values
                     );
                 }
                 if (
