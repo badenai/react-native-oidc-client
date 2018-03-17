@@ -5,19 +5,18 @@ import AuthorizationGrant from './AuthorizationGrant';
 import UrlUtility from './UrlUtility';
 import RedirectNavigator from './RedirectNavigator';
 
-export default class AuthorizationCodeGrant extends AuthorizationGrant {
+export default class ImplicitGrant extends AuthorizationGrant {
     constructor(config) {
         super(config);
-        Log.debug('create AuthorizationCodeGrant');
+        Log.debug('create ImplicitGrant');
     }
 
     async prepare() {
         this.url = await this.config.metadataService.getAuthorizationEndpoint();
         const requestParams = this.cleanRequest({
-            response_type: 'code',
+            response_type: 'id_token token',
             redirect_uri: this.config._redirect_uri,
             client_id: this.config._client_id,
-            client_secret: this.config._client_secret,
             scope: this.config._scope,
             display: this.config._display,
             prompt: this.config._prompt,
@@ -35,11 +34,11 @@ export default class AuthorizationCodeGrant extends AuthorizationGrant {
         }
 
         if (!requestParams.redirect_uri) {
-            Log.error('No redirect_uri passed to AuthorizationCodeGrant');
+            Log.error('No redirect_uri passed to ImplicitGrant');
             throw new Error('_redirect_uri');
         }
         if (!requestParams.scope) {
-            Log.error('No scope passed to AuthorizationCodeGrant');
+            Log.error('No scope passed to ImplicitGrant');
             throw new Error('scope');
         }
 
@@ -48,14 +47,14 @@ export default class AuthorizationCodeGrant extends AuthorizationGrant {
             nonce: oidc,
             client_id: requestParams.client_id,
             authority: this.config.authority,
-            authorization_flow: Global.AUTHORIZATION_FLOWS.AUTHORIZATION_CODE,
+            authorization_flow: Global.AUTHORIZATION_FLOWS.IMPLICIT,
         });
 
         requestParams.nonce = this.state.nonce;
         requestParams.state = this.state.id;
 
         this.url = UrlUtility.buildRequestUrl(this.url, requestParams);
-        Log.debug(`AuthorizationCodeGrant prepare url ${this.url}`);
+        Log.debug(`ImplicitGrant prepare url ${this.url}`);
     }
 
     async request() {

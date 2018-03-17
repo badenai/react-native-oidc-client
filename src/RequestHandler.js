@@ -37,7 +37,7 @@ export default class RequestHandler {
             if (response_type === 'code') {
                 return AUTHORIZATION_FLOWS.AUTHORIZATION_CODE;
             }
-            if (response_type === 'token') {
+            if (response_type.startsWith('id_token')) {
                 return AUTHORIZATION_FLOWS.IMPLICIT;
             }
 
@@ -62,6 +62,6 @@ export default class RequestHandler {
                 Currently it is not supported.`);
             }
         }
-        throw Error(`RequestHandler can not idenity your request`);
+        throw Error(`RequestHandler can not identify your request`);
     };
 }
