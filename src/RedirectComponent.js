@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Log from './Log';
 import { Linking } from 'react-native';
 
 import Client from './Client';
@@ -28,8 +29,12 @@ class RedirectComponent extends Component {
     _handleOpenURL = async event => {
         const { url } = event;
         const client = await Client.restore();
-
-        client.handleRedirect(url);
+        if (url.startsWith(client.config.redirect_uri)) {
+            Log.debug(`RedirectComponent: handle url ${url}`);
+            client.handleRedirect(url);
+        } else {
+            Log.debug(`RedirectComponent: ignore url ${url}`);
+        }
     };
 
     render = () => null;
