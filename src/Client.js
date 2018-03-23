@@ -287,6 +287,14 @@ export default class Client {
         return AccessToken.fromStorageString(storageString);
     }
 
+    // static way to retrieve the access token for a given configuration
+    // just pass a config object
+    static async getAccessToken({ authority, client_id }) {
+        const store = Global.storage;
+        const key = Global.accessTokenKey(authority, client_id);
+        return AccessToken.fromStorageString(store.get(key));
+    }
+
     clearStaleState(stateStore) {
         Log.debug('Client.clearStaleState');
 

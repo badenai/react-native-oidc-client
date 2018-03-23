@@ -1,4 +1,5 @@
-import Config from './../Config';
+import Config from './../../Config';
+import AmazonResponseValidator from './AmazonResponseValidator';
 
 class AmazonConfig extends Config {
     constructor(config) {
@@ -10,6 +11,9 @@ class AmazonConfig extends Config {
                 token_endpoint: 'https://api.amazon.com/auth/o2/token',
                 userinfo_endpoint: 'https://api.amazon.com/user/profile',
             },
+            ResponseValidatorCtor: AmazonResponseValidator,
+            // not available for amazon
+            filterProtocolClaims: false,
         });
     }
 }
