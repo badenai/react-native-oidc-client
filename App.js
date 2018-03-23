@@ -50,7 +50,7 @@ export default class App extends Component<Props> {
 
         const amazonConfig = new AmazonConfig({
             response_type: 'code',
-            scope: 'profile:user_id',
+            scope: 'profile',
             client_id:
                 'amzn1.application-oa2-client.71d745867fd948ce93e8bdb6454fe38b',
             client_secret:
@@ -58,12 +58,7 @@ export default class App extends Component<Props> {
             redirect_uri: 'https://com.reactnativeoidcclient',
             acr: 'default',
             prompt: 'consent login',
-            authority: 'https://api.amazon.com/auth/o2',
             loadUserInfo: true,
-            metadata: {
-                authorization_endpoint: 'https://www.amazon.com/ap/oa',
-                token_endpoint: 'https://api.amazon.com/auth/o2/token',
-            },
         });
 
         const client = new Client(amazonConfig);

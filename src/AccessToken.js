@@ -1,6 +1,7 @@
 import Log from './Log';
 
 const OidcScope = 'openid';
+const AmazonId = 'Atza|';
 
 export default class AccessToken {
     constructor(values) {
@@ -45,7 +46,11 @@ export default class AccessToken {
     }
 
     get isOpenIdConnect() {
-        return this.scopes.indexOf(OidcScope) >= 0 || !!this.id_token;
+        return (
+            this.scopes.indexOf(OidcScope) >= 0 ||
+            !!this.id_token ||
+            this.access_token.startsWith(AmazonId)
+        );
     }
 
     toStorageString() {
