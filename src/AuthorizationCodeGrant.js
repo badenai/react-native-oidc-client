@@ -13,7 +13,7 @@ export default class AuthorizationCodeGrant extends AuthorizationGrant {
 
     async prepare() {
         this.url = await this.config.metadataService.getAuthorizationEndpoint();
-        const requestParams = this.cleanRequest({
+        let requestParams = this.cleanRequest({
             response_type: 'code',
             redirect_uri: this.config._redirect_uri,
             client_id: this.config._client_id,
@@ -43,6 +43,13 @@ export default class AuthorizationCodeGrant extends AuthorizationGrant {
             throw new Error('scope');
         }
 
+        requestParams = await this.prepareState(requestParams);
+
+        this.url = UrlUtility.buildRequestUrl(this.url, requestParams);
+        Log.debug(`AuthorizationCodeGrant prepare url ${this.url}`);
+    }
+
+    async prepareState(requestParams) {
         let oidc = this.isOidc(requestParams.response_type);
         this.state = new AuthorizeState({
             nonce: oidc,
@@ -50,12 +57,9 @@ export default class AuthorizationCodeGrant extends AuthorizationGrant {
             authority: this.config.authority,
             authorization_flow: Global.AUTHORIZATION_FLOWS.AUTHORIZATION_CODE,
         });
-
         requestParams.nonce = this.state.nonce;
         requestParams.state = this.state.id;
-
-        this.url = UrlUtility.buildRequestUrl(this.url, requestParams);
-        Log.debug(`AuthorizationCodeGrant prepare url ${this.url}`);
+        return requestParams;
     }
 
     async request() {

@@ -1,9 +1,10 @@
 import Log from './Log';
-import Global from './Global';
 import StateStore from './StateStore';
 import ResponseValidator from './ResponseValidator';
 import MetadataService from './MetadataService';
 import RequestService from './RequestService';
+import AuthorizationCodeGrant from './AuthorizationCodeGrant';
+import AccessTokenGrant from './AccessTokenGrant';
 
 const OidcMetadataUrlPath = '.well-known/openid-configuration';
 
@@ -42,6 +43,9 @@ export default class Config {
         ResponseValidatorCtor = ResponseValidator,
         MetadataServiceCtor = MetadataService,
         RequestServiceCtor = RequestService,
+        // authorization flow config
+        AuthorizationGrantCtor = AuthorizationCodeGrant,
+        AccessTokenGrantCtor = AccessTokenGrant,
         // extra query params
         extraQueryParams = {},
     } = {}) {
@@ -73,6 +77,13 @@ export default class Config {
         this._validator = new ResponseValidatorCtor(this);
         this._metadataService = new MetadataServiceCtor(this);
         this._requestService = new RequestServiceCtor();
+
+        this._authorizationGrant = new AuthorizationGrantCtor(this);
+        if (this._authorizationGrant instanceof AuthorizationCodeGrant) {
+            this._accessTokenGrant = new AccessTokenGrantCtor(this);
+        } else {
+            this._accessTokenGrant = null;
+        }
 
         this._extraQueryParams =
             typeof extraQueryParams === 'object' ? extraQueryParams : {};
@@ -228,6 +239,14 @@ export default class Config {
     }
     get requestService() {
         return this._requestService;
+    }
+
+    // Configured grants
+    get authorizationGrant() {
+        return this._authorizationGrant;
+    }
+    get accessTokenGrant() {
+        return this._accessTokenGrant;
     }
 
     // extra query params

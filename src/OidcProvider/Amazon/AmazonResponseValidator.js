@@ -1,4 +1,4 @@
-import Log from './Log';
+import Log from './../../Log';
 import ResponseValidator from '../../ResponseValidator';
 
 class AmazonResponseValidator extends ResponseValidator {
