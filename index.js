@@ -11,7 +11,7 @@ import AmazonConfig from './src/OidcProvider/Amazon/AmazonConfig';
 
 import Client from './src/Client';
 
-export default {
+export {
     // RedirectComponents
     RedirectComponent,
     // Config types
