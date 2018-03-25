@@ -27,13 +27,18 @@ class RedirectComponent extends Component {
     }
 
     _handleOpenURL = async event => {
-        const { url } = event;
-        const client = await Client.restore();
-        if (url.startsWith(client.config.redirect_uri)) {
-            Log.debug(`RedirectComponent: handle url ${url}`);
-            client.handleRedirect(url);
-        } else {
-            Log.debug(`RedirectComponent: ignore url ${url}`);
+        const url = event.hasOwnProperty(url) ? event.url : event;
+        try {
+            const client = await Client.restore();
+
+            if (url && url.startsWith(client.config.redirect_uri)) {
+                Log.debug(`RedirectComponent: handle url ${url}`);
+                client.handleRedirect(url);
+            } else {
+                Log.debug(`RedirectComponent: ignore url ${url}`);
+            }
+        } catch (err) {
+            Log.debug(`RedirectComponent: ${err}`);
         }
     };
 
