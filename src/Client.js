@@ -49,6 +49,12 @@ export default class Client {
     get config() {
         return this._config;
     }
+    get authorizationGrant() {
+        return this.config.authorizationGrant;
+    }
+    get accessTokenGant() {
+        return this.config.accessTokenGant;
+    }
 
     get waitForAuthorization() {
         return this._waitForAuthorization;
@@ -64,16 +70,14 @@ export default class Client {
 
         if (
             authorizationCodeFlow ===
-            Global.AUTHORIZATION_FLOWS.AUTHORIZATION_CODE
-        ) {
-            this.authorizationCodeGrant();
-            return new Promise(resolve => {
-                this.waitForAuthorization = resolve;
-            });
-        } else if (
+                Global.AUTHORIZATION_FLOWS.AUTHORIZATION_CODE ||
             authorizationCodeFlow === Global.AUTHORIZATION_FLOWS.IMPLICIT
         ) {
-            this.implicitGrant();
+            Log.debug(`Client.authorizationGrant`);
+            await this.authorizationGrant.prepare();
+            Log.debug(`Call authorize with ${this.authorizationGrant.url}`);
+            await this.store();
+            await this.authorizationGrant.request();
             return new Promise(resolve => {
                 this.waitForAuthorization = resolve;
             });
@@ -110,24 +114,6 @@ export default class Client {
             Log.debug(`Client.refresh no access token to refresh.`);
             return Promise.reject(`Client.refresh no access token to refresh.`);
         }
-    }
-
-    async authorizationCodeGrant() {
-        Log.debug(`Client.authorizationCodeGrant`);
-        const authorizationCodeGrant = new AuthorizationCodeGrant(this.config);
-        await authorizationCodeGrant.prepare();
-        Log.debug(`Call authorize with ${authorizationCodeGrant.url}`);
-        await this.store();
-        return authorizationCodeGrant.request();
-    }
-
-    async implicitGrant() {
-        Log.debug(`Client.implicitGrant`);
-        const implicitGrant = new ImplicitGrant(this.config);
-        await implicitGrant.prepare();
-        Log.debug(`Call authorize with ${implicitGrant.url}`);
-        await this.store();
-        return implicitGrant.request();
     }
 
     handleRedirect(url) {

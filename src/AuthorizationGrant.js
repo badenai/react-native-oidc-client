@@ -9,6 +9,10 @@ export default class AuthorizationGrant {
         throw new Error('AuthorizeGrant prepare has to be implemented.');
     }
 
+    async prepareState() {
+        throw new Error('AuthorizeGrant prepareState has to be implemented.');
+    }
+
     async request() {
         throw new Error('AuthorizeGrant request has to be implemented.');
     }

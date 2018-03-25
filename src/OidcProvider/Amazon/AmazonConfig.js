@@ -1,5 +1,6 @@
 import Config from './../../Config';
 import AmazonResponseValidator from './AmazonResponseValidator';
+import AmazonAuthorizationCodeGrant from './AmazonAuthorizationCodeGrant';
 
 class AmazonConfig extends Config {
     constructor(config) {
@@ -12,6 +13,7 @@ class AmazonConfig extends Config {
                 userinfo_endpoint: 'https://api.amazon.com/user/profile',
             },
             ResponseValidatorCtor: AmazonResponseValidator,
+            AuthorizationGrantCtor: AmazonAuthorizationCodeGrant,
             // not available for amazon
             filterProtocolClaims: false,
         });
