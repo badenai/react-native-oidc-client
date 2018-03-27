@@ -10,6 +10,7 @@ import RedirectComponent from './src/RedirectComponent';
 import AmazonConfig from './src/OidcProvider/Amazon/AmazonConfig';
 
 import Client from './src/Client';
+import JoseUtil from './src/JoseUtil';
 
 export {
     // RedirectComponents
@@ -18,4 +19,5 @@ export {
     AmazonConfig,
     // Business objects
     Client,
+    JoseUtil,
 };
