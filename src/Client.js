@@ -3,7 +3,7 @@ import Global from './Global';
 import Config from './Config';
 import ErrorResponse from './ErrorResponse';
 import RequestHandler from './RequestHandler';
-import AccessToken from './AccessToken';
+import Token from './Token';
 import EndSessionRequest from './EndSessionRequest';
 import SignoutResponse from './SignoutResponse';
 import AuthorizationState from './AuthorizationState';
@@ -63,7 +63,7 @@ export default class Client {
         this._waitForAuthorization = resolver;
     }
 
-    async authorize() {
+    async authorize(authorizationInfo) {
         const authorizationCodeFlow = RequestHandler.identifyAuthenticationRequest(
             this.config
         );
@@ -74,7 +74,7 @@ export default class Client {
             authorizationCodeFlow === Global.AUTHORIZATION_FLOWS.IMPLICIT
         ) {
             Log.debug(`Client.authorizationGrant`);
-            await this.authorizationGrant.prepare();
+            await this.authorizationGrant.prepare(authorizationInfo);
             Log.debug(`Call authorize with ${this.authorizationGrant.url}`);
             await this.store();
             await this.authorizationGrant.request();
@@ -94,18 +94,18 @@ export default class Client {
     }
 
     async refresh() {
-        const accessToken = await this.loadAccessToken();
-        if (accessToken) {
-            if (accessToken.refresh_token) {
+        const token = await this.getToken();
+        if (token) {
+            if (token.refresh_token) {
                 let refresh_token = await this.refreshTokenService.refresh(
-                    accessToken
+                    token
                 );
-                const updatedAccessToken = await this.validator.validateRefreshResponse(
-                    accessToken,
+                const updatedToken = await this.validator.validateRefreshResponse(
+                    token,
                     refresh_token
                 );
-                await this.storeAccessToken(updatedAccessToken);
-                return updatedAccessToken;
+                await this.storeToken(updatedToken);
+                return updatedToken;
             } else {
                 Log.debug(`Client.refresh no refresh token.`);
                 return Promise.reject(`Client.refresh no refresh token.`);
@@ -119,7 +119,7 @@ export default class Client {
     handleRedirect(url) {
         return new Promise(async (resolve, reject) => {
             Log.debug(`Client.handleResponse response url ${url}`);
-            let accessToken;
+            let tokenResponse;
             const values = UrlUtility.parseUrlFragment(url, '?');
 
             // this checks the state value of the response
@@ -149,7 +149,7 @@ export default class Client {
                     const responseJson = await accessTokenGrant.request();
                     if (responseJson) {
                         const response = await responseJson.json();
-                        accessToken = await this.handleAccessTokenResponse(
+                        tokenResponse = await this.handleTokenResponse(
                             authorizationState,
                             response
                         );
@@ -163,7 +163,7 @@ export default class Client {
                     authorizationState.authorization_flow ===
                     Global.AUTHORIZATION_FLOWS.IMPLICIT
                 ) {
-                    accessToken = await this.handleAccessTokenResponse(
+                    tokenResponse = await this.handleTokenResponse(
                         authorizationState,
                         values
                     );
@@ -180,30 +180,30 @@ export default class Client {
                 Log.error('Invalid state.');
                 return reject(new Error('Invalid state.'));
             }
-            return this.waitForAuthorization(accessToken);
+            return this.waitForAuthorization(tokenResponse);
         });
     }
 
-    async handleAccessTokenResponse(authorizationState, response) {
+    async handleTokenResponse(authorizationState, response) {
         Log.debug(
             `Client.handleAuthenticationResponse ${JSON.stringify(response)}`
         );
 
-        let accessToken = new AccessToken(response);
+        let token = new Token(response);
         Log.debug('Received state from storage; validating response');
         try {
-            accessToken = await this.validator.validateAuthorizationResponse(
+            token = await this.validator.validateAuthorizationResponse(
                 authorizationState,
-                accessToken
+                token
             );
-            await this.storeAccessToken(accessToken);
+            await this.storeToken(token);
         } catch (err) {
             Log.debug(
-                `Client.handleAccessTokenResponse validation of access token failed.`,
+                `Client.handleTokenResponse validation of access token failed.`,
                 err
             );
         }
-        return accessToken;
+        return token;
     }
 
     async endSession(id_token) {
@@ -244,41 +244,34 @@ export default class Client {
         }
     }
 
-    get accessTokenKey() {
+    get tokenKey() {
         const { authority, client_id } = this.config;
         return Global.accessTokenKey(authority, client_id);
     }
 
-    async storeAccessToken(accessToken) {
-        if (accessToken) {
-            const key = this.accessTokenKey;
-            Log.debug(`Client.storeAccessToken with key ${key}`);
-            const storageString = accessToken.toStorageString();
+    async storeToken(token) {
+        if (token) {
+            const key = this.tokenKey;
+            Log.debug(`Client.storeToken with key ${key}`);
+            const storageString = token.toStorageString();
             return this.stateStore.set(key, storageString);
         } else {
-            throw new Error(`Client.storeAccessToken no access token given.`);
+            throw new Error(`Client.storeToken no access token given.`);
         }
     }
 
-    async removeAccessToken() {
-        const key = this.accessTokenKey;
-        Log.debug(`Client.removeAccessToken with key ${key}`);
+    async removeToken() {
+        const key = this.tokenKey;
+        Log.debug(`Client.removeToken with key ${key}`);
         return this.stateStore.remove(key);
-    }
-
-    async loadAccessToken() {
-        const key = this.accessTokenKey;
-        Log.debug(`Client.loadAccessToken with key ${key}`);
-        const storageString = await this.stateStore.get(key);
-        return AccessToken.fromStorageString(storageString);
     }
 
     // static way to retrieve the access token for a given configuration
     // just pass a config object
-    static async getAccessToken({ authority, client_id }) {
-        const store = Global.storage;
-        const key = Global.accessTokenKey(authority, client_id);
-        return AccessToken.fromStorageString(store.get(key));
+    async getToken() {
+        const key = this.tokenKey;
+        Log.debug(`Client.getAccessToken with key ${key}`);
+        return Token.fromStorageString(this.stateStore.get(key));
     }
 
     clearStaleState(stateStore) {

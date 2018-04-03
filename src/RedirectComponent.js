@@ -27,7 +27,7 @@ class RedirectComponent extends Component {
     }
 
     _handleOpenURL = async event => {
-        const url = event.hasOwnProperty(url) ? event.url : event;
+        const url = event.hasOwnProperty('url') ? event.url : event;
         try {
             const client = await Client.restore();
 

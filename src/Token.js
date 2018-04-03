@@ -3,7 +3,7 @@ import Log from './Log';
 const OidcScope = 'openid';
 const AmazonId = 'Atza|';
 
-export default class AccessToken {
+export default class Token {
     constructor(values) {
         this.error = values.error;
         this.error_description = values.error_description;
@@ -54,7 +54,7 @@ export default class AccessToken {
     }
 
     toStorageString() {
-        Log.debug('AccessToken.toStorageString');
+        Log.debug('Token.toStorageString');
         if (this.error) {
             return JSON.stringify({
                 error: this.error,
@@ -76,7 +76,7 @@ export default class AccessToken {
     }
 
     static fromStorageString(storageString) {
-        Log.debug('AccessToken.fromStorageString');
-        return new AccessToken(JSON.parse(storageString));
+        Log.debug('Token.fromStorageString');
+        return new Token(JSON.parse(storageString));
     }
 }
