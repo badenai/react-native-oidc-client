@@ -246,7 +246,7 @@ export default class Client {
 
     get tokenKey() {
         const { authority, client_id } = this.config;
-        return Global.accessTokenKey(authority, client_id);
+        return encodeURI(Global.accessTokenKey(authority, client_id));
     }
 
     async storeToken(token) {
@@ -271,7 +271,7 @@ export default class Client {
     async getToken() {
         const key = this.tokenKey;
         Log.debug(`Client.getAccessToken with key ${key}`);
-        return Token.fromStorageString(this.stateStore.get(key));
+        return Token.fromStorageString(await this.stateStore.get(key));
     }
 
     clearStaleState(stateStore) {

@@ -76,7 +76,7 @@ export default class Token {
     }
 
     static fromStorageString(storageString) {
-        Log.debug('Token.fromStorageString');
+        Log.debug('Token.fromStorageString', storageString);
         return new Token(JSON.parse(storageString));
     }
 }
