@@ -12,16 +12,13 @@ export default class StateStore {
         key = this._prefix + key;
         Log.debug('StateStore.set', key);
 
-        return await this._store.setItem(key, value);
+        return this._store.setItem(key, value);
     };
 
     get = key => {
         key = this._prefix + key;
         Log.debug('StateStore.get', key);
-
-        let item = this._store.getItem(key);
-
-        return item;
+        return this._store.getItem(key);
     };
 
     remove = key => {
