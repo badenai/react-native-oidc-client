@@ -271,7 +271,8 @@ export default class Client {
     async getToken() {
         const key = this.tokenKey;
         Log.debug(`Client.getAccessToken with key ${key}`);
-        return Token.fromStorageString(await this.stateStore.get(key));
+        const tokenString = await this.stateStore.get(key);
+        return tokenString ? Token.fromStorageString(tokenString) : null;
     }
 
     clearStaleState(stateStore) {
