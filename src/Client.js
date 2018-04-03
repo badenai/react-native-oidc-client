@@ -250,13 +250,13 @@ export default class Client {
     }
 
     async storeToken(token) {
-        if (token) {
+        if (token && token instanceof Token) {
             const key = this.tokenKey;
             Log.debug(`Client.storeToken with key ${key}`);
             const storageString = token.toStorageString();
             return this.stateStore.set(key, storageString);
         } else {
-            throw new Error(`Client.storeToken no access token given.`);
+            throw new Error(`Client.storeToken not support token`);
         }
     }
 
