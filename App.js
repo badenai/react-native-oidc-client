@@ -35,11 +35,11 @@ export default class App extends Component<Props> {
         // const auth_endpoint ="http://vm-plm-elite.contact.de:80/oidc/authorization";
 
         const config = {
-            response_type: 'id_token token',
+            response_type: 'code',
             scope: 'openid profile offline_access',
-            client_id: 'XsTG8yZCxZLT',
+            client_id: 'lGF8ySZLegOJ',
             client_secret:
-                '1a7fcf2d0de3ee6a10bac0bdad3a85b7810184a4fbf52daed89da3e4',
+                '278710b699d096ee7a3593a9f2e5dac28f4e09bacbd2e5bc95b0e5d8',
             redirect_uri: 'https://com.reactnativeoidcclient',
             acr_values: 'http://oidc.contact.de',
             acr: 'default',
@@ -61,7 +61,7 @@ export default class App extends Component<Props> {
             loadUserInfo: true,
         });
 
-        const client = new Client(amazonConfig);
+        const client = new Client(config);
         const response = await client.authorize();
         console.log('THIS SHOULD HAPPEN LAST.', response);
         // await client.refresh();
