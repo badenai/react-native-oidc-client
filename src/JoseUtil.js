@@ -1,7 +1,14 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-import { jws, KEYUTIL as KeyUtil, X509, crypto, hextob64u } from 'jsrsasign';
+import {
+    jws,
+    KEYUTIL as KeyUtil,
+    X509,
+    crypto,
+    hextob64u,
+    RSAKey,
+} from 'jsrsasign';
 import Log from './Log';
 
 const AllowedSigningAlgs = [
@@ -27,6 +34,35 @@ export default class JoseUtil {
         );
     }
 
+    static signJwtWithJwks(jwks, payload) {
+        const preferredAlgs = ['EC', 'RSA'];
+        let alg;
+
+        try {
+            let key = JoseUtil.getKeyFromJwks(jwks, preferredAlgs);
+            // Necessary otherwise we get an error from JWS.sign but we do not need a prv key here
+            if (!key.isPrivate) key.isPrivate = true;
+
+            if (key instanceof RSAKey) alg = 'RS256';
+            if (key instanceof crypto.ECDSA) alg = 'ES256';
+            else
+                Promise.reject(
+                    new Error(`signJwtWithJwks: Not supported Key class.`)
+                );
+
+            const signedJwt = jws.JWS.sign(
+                null,
+                JSON.stringify({ alg: alg }),
+                JSON.stringify(payload),
+                key
+            );
+            Log.debug(`signJwtWithJwks: signed jwt: ${signedJwt}`);
+            return Promise.resolve(signedJwt);
+        } catch (err) {
+            console.log('Err', err);
+        }
+    }
+
     static parseJwt(jwt) {
         Log.debug('JoseUtil.parseJwt');
         try {
@@ -44,35 +80,7 @@ export default class JoseUtil {
         Log.debug('JoseUtil.validateJwt');
 
         try {
-            if (key.kty === 'RSA') {
-                if (key.e && key.n) {
-                    key = KeyUtil.getKey(key);
-                } else if (key.x5c && key.x5c.length) {
-                    key = KeyUtil.getKey(
-                        X509.getPublicKeyFromCertPEM(key.x5c[0])
-                    );
-                } else {
-                    Log.error('RSA key missing key material', key);
-                    return Promise.reject(
-                        new Error('RSA key missing key material')
-                    );
-                }
-            } else if (key.kty === 'EC') {
-                if (key.crv && key.x && key.y) {
-                    key = KeyUtil.getKey(key);
-                } else {
-                    Log.error('EC key missing key material', key);
-                    return Promise.reject(
-                        new Error('EC key missing key material')
-                    );
-                }
-            } else {
-                Log.error('Unsupported key type', key && key.kty);
-                return Promise.reject(
-                    new Error('Unsupported key type: ' + key && key.kty)
-                );
-            }
-
+            key = JoseUtil.getKey(key);
             return JoseUtil._validateJwt(
                 jwt,
                 key,
@@ -168,6 +176,47 @@ export default class JoseUtil {
         }
 
         return Promise.resolve();
+    }
+
+    static getKeyFromJwks(jwks, preferredAlgs) {
+        let algs = jwks.filter(jwk => jwk.use && jwk.use == 'sig');
+        if (preferredAlgs) {
+            algs = preferredAlgs.map(pref =>
+                algs.filter(alg => alg.kty && alg.kty === pref)
+            );
+            algs = algs.reduce(
+                (prev, curr) => (prev && prev.length > 0 ? prev : curr)
+            );
+        }
+        if (algs && algs.length > 0) {
+            Log.debug(`getKeyFromJwks: found key ${algs[0]}.`);
+            return JoseUtil.getKey(algs[0]);
+        }
+        return null;
+    }
+
+    static getKey(key) {
+        if (key.kty === 'RSA') {
+            if (key.e && key.n) {
+                key = KeyUtil.getKey(key);
+            } else if (key.x5c && key.x5c.length) {
+                key = KeyUtil.getKey(X509.getPublicKeyFromCertPEM(key.x5c[0]));
+            } else {
+                Log.error('RSA key missing key material', key);
+                throw new Error('RSA key missing key material');
+            }
+        } else if (key.kty === 'EC') {
+            if (key.crv && key.x && key.y) {
+                key = KeyUtil.getKey(key);
+            } else {
+                Log.error('EC key missing key material', key);
+                throw new Error('EC key missing key material');
+            }
+        } else {
+            Log.error('Unsupported key type', key && key.kty);
+            throw new Error('Unsupported key type: ' + key && key.kty);
+        }
+        return key;
     }
 
     static hashString(value, alg) {
