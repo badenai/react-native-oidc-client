@@ -8,7 +8,7 @@ The implementation follows the specifications described in [OAuth 2.0](https://t
 [OpenID Connect](http://openid.net/specs/openid-connect-core-1_0.html).
 
 ### Usage:
-####Prepare your config:
+#### Prepare your config:
 ```js
 const config = {
         response_type: 'code',
@@ -24,7 +24,7 @@ const config = {
     };
 ```
 
-####Create the client and call authorize:
+#### Create the client and call authorize:
 ```js
 const client = new Client(config);
 const tokenResponse = await client.authorize();
@@ -38,7 +38,7 @@ You can also get the access token by calling the getToken() Method of your OIDC 
 const accessToken = await client.getToken();
 ```
 
-####Mount the RedirectComponent in your app tree:
+#### Mount the RedirectComponent in your app tree:
 ```js
 <App>
     <SomeComponents>...</SomeComponents>
@@ -48,8 +48,8 @@ const accessToken = await client.getToken();
 The ``<RedirectComponent />`` has to be mounted somewhere in your app tree to handle the redirect from your
 system browser.
 
-####Setup redirect url:
-#####Android: 
+#### Setup redirect url:
+##### Android: 
 
 Add to you main ``<Activity>`` in your ``AndroidManifest.xml`` an ``<intent-filter>``
 ```
@@ -61,6 +61,6 @@ Add to you main ``<Activity>`` in your ``AndroidManifest.xml`` an ``<intent-filt
 </intent-filter>
 ```
 
-#####IOS:
+##### IOS:
 Coming soon.
 
