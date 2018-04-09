@@ -26,33 +26,35 @@ const AllowedSigningAlgs = [
 export default class JoseUtil {
     static generateHMACJwt(payload, secret) {
         const header = { alg: 'HS256' };
-        return jws.JWS.sign(
-            null,
-            JSON.stringify(header),
-            JSON.stringify(payload),
-            { utf8: secret }
+        return Promise.resolve(
+            jws.JWS.sign(
+                null,
+                JSON.stringify(header),
+                JSON.stringify(payload),
+                { utf8: secret }
+            )
         );
     }
 
     static signJwtWithJwks(jwks, payload) {
         const preferredAlgs = ['EC', 'RSA'];
-        let alg;
-
         try {
-            let key = JoseUtil.getKeyFromJwks(jwks, preferredAlgs);
+            let { head, key } = JoseUtil.getKeyFromJwks(jwks, preferredAlgs);
             // Necessary otherwise we get an error from JWS.sign but we do not need a prv key here
             if (!key.isPrivate) key.isPrivate = true;
 
-            if (key instanceof RSAKey) alg = 'RS256';
-            if (key instanceof crypto.ECDSA) alg = 'ES256';
-            else
-                Promise.reject(
-                    new Error(`signJwtWithJwks: Not supported Key class.`)
-                );
-
+            if (!head.alg) {
+                if (key instanceof RSAKey) head.alg = 'RS256';
+                if (key instanceof crypto.ECDSA) head.alg = 'ES256';
+                else
+                    Promise.reject(
+                        new Error(`signJwtWithJwks: Not supported Key class.`)
+                    );
+            }
+            Log.debug(`signJwtWithJwks: JOSE.header(${JSON.stringify(head)})`);
             const signedJwt = jws.JWS.sign(
                 null,
-                JSON.stringify({ alg: alg }),
+                JSON.stringify(head),
                 JSON.stringify(payload),
                 key
             );
@@ -179,18 +181,27 @@ export default class JoseUtil {
     }
 
     static getKeyFromJwks(jwks, preferredAlgs) {
-        let algs = jwks.filter(jwk => jwk.use && jwk.use == 'sig');
+        let keys = jwks.filter(jwk => jwk.use && jwk.use == 'enc');
         if (preferredAlgs) {
-            algs = preferredAlgs.map(pref =>
-                algs.filter(alg => alg.kty && alg.kty === pref)
+            keys = preferredAlgs.map(pref =>
+                keys.filter(alg => alg.kty && alg.kty === pref)
             );
-            algs = algs.reduce(
+            keys = keys.reduce(
                 (prev, curr) => (prev && prev.length > 0 ? prev : curr)
             );
         }
-        if (algs && algs.length > 0) {
-            Log.debug(`getKeyFromJwks: found key ${algs[0]}.`);
-            return JoseUtil.getKey(algs[0]);
+        if (keys && keys.length > 0) {
+            Log.debug(`getKeyFromJwks: found key ${JSON.stringify(keys[0])}.`);
+            let head = {};
+            const key = keys[0];
+            const { alg, kid, use } = key;
+            if (alg) head.alg = alg;
+            if (kid) head.kid = kid;
+            if (use) head.use = use;
+            return {
+                head: head,
+                key: JoseUtil.getKey(key),
+            };
         }
         return null;
     }
