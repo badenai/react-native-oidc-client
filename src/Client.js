@@ -1,24 +1,17 @@
 import Log from './Log';
 import Global from './Global';
 import Config from './Config';
-import ErrorResponse from './ErrorResponse';
 import RequestHandler from './RequestHandler';
 import Token from './Token';
 import EndSessionRequest from './EndSessionRequest';
-import SignoutResponse from './SignoutResponse';
 import AuthorizationState from './AuthorizationState';
 import State from './State';
 import StateStore from './StateStore';
 import AuthorizationCodeResponse from './AuthorizationCodeResponse';
 import UrlUtility from './UrlUtility';
-import AuthorizationCodeGrant from './AuthorizationCodeGrant';
 import AccessTokenGrant from './AccessTokenGrant';
 import RedirectNavigator from './RedirectNavigator';
 import RefreshTokenService from './RefreshTokenService';
-import ImplicitGrant from './ImplicitGrant';
-
-Log.logger = console;
-Log.level = 4;
 
 export default class Client {
     constructor(config = {}) {
