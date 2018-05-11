@@ -7,6 +7,7 @@ import MetadataService from './MetadataService';
 import UserInfoService from './UserInfoService';
 import ErrorResponse from './ErrorResponse';
 import JoseUtil from './JoseUtil';
+import Token from './Token';
 
 const ProtocolClaims = [
     'nonce',
@@ -67,11 +68,8 @@ export default class ResponseValidator {
             await this.compareIdToken(accessToken.profile, id_token);
         }
 
-        if (response.refresh_token) {
-            accessToken.refresh_token = response.refresh_token;
-        }
-        accessToken.access_token = response.access_token;
-        return accessToken;
+        const updatedToken = new Token({ ...accessToken, ...response });
+        return updatedToken;
     }
 
     async compareIdToken(ref, token) {
