@@ -230,7 +230,7 @@ export default class Client {
     }
 
     static async restore() {
-        if (global.hasOwnProperty('OIDCClient') && global.OIDCClient) {
+        if (global.OIDCClient) {
             return global.OIDCClient;
         } else {
             throw new Error(`Client.restore no client in global namespace.`);
