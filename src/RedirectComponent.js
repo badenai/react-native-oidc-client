@@ -26,10 +26,10 @@ class RedirectComponent extends Component {
         Linking.removeEventListener('url', this._handleOpenURL);
     }
 
-    _handleOpenURL = async event => {
+    _handleOpenURL = event => {
         const url = event.hasOwnProperty('url') ? event.url : event;
         try {
-            const client = await Client.restore();
+            const client = Client.restore();
 
             if (url && url.startsWith(client.config.redirect_uri)) {
                 Log.debug(`RedirectComponent: handle url ${url}`);

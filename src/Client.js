@@ -13,6 +13,8 @@ import AccessTokenGrant from './AccessTokenGrant';
 import RedirectNavigator from './RedirectNavigator';
 import RefreshTokenService from './RefreshTokenService';
 
+let OIDCClient;
+
 export default class Client {
     constructor(config = {}) {
         if (config instanceof Config) {
@@ -69,7 +71,7 @@ export default class Client {
             Log.debug(`Client.authorizationGrant`);
             await this.authorizationGrant.prepare(authorizationInfo);
             Log.debug(`Call authorize with ${this.authorizationGrant.url}`);
-            await this.store();
+            this.store();
             await this.authorizationGrant.request();
             return new Promise(resolve => {
                 this.waitForAuthorization = resolve;
@@ -226,12 +228,12 @@ export default class Client {
     }
 
     store() {
-        global.OIDCClient = this;
+        OIDCClient = this;
     }
 
-    static async restore() {
-        if (global.OIDCClient) {
-            return global.OIDCClient;
+    static restore() {
+        if (OIDCClient) {
+            return OIDCClient;
         } else {
             throw new Error(`Client.restore no client in global namespace.`);
         }

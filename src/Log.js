@@ -86,3 +86,5 @@ export default class Log {
 }
 
 Log.reset();
+// logger = console;
+// level = DEBUG;
