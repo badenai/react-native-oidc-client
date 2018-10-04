@@ -1,8 +1,11 @@
 {
   "name": "react-native-oidc-client",
-  "version": "0.0.6",
+  "version": "0.0.9",
   "author": "dba <dba.developing@gmail.com>",
+  "main": "./distribution/index.js",
   "scripts": {
+    "build": "babel src --presets=babel-preset-es2015,babel-preset-react-native --out-dir distribution",
+    "prepublish": "npm run build",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest"
   },
@@ -25,8 +28,10 @@
     "react-native"
   ],
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-eslint": "^8.2.2",
     "babel-jest": "22.4.1",
+    "babel-preset-es2015": "^6.24.1",
     "babel-preset-react-native": "4.0.0",
     "eslint": "^4.18.2",
     "eslint-config-prettier": "^2.9.0",
