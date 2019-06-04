@@ -1,6 +1,6 @@
 {
   "name": "react-native-oidc-client",
-  "version": "0.0.9",
+  "version": "1.0.0",
   "author": "dba <dba.developing@gmail.com>",
   "main": "./distribution/index.js",
   "scripts": {
