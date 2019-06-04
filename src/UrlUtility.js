@@ -1,6 +1,4 @@
 import Log from './Log';
-import Global from './Global';
-
 export default class UrlUtility {
     static addQueryParam(url, name, value) {
         if (url.indexOf('?') < 0) {

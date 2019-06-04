@@ -1,4 +1,4 @@
-package com.react_native_oidc_client;
+package com.reactNativeOidcClient;
 
 import com.facebook.react.ReactActivity;
 
@@ -10,6 +10,6 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     protected String getMainComponentName() {
-        return "react_native_oidc_client";
+        return "react-native-oidc-client";
     }
 }
