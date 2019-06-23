@@ -1,4 +1,4 @@
-package com.reactNativeOidcClient;
+package com.react_native_oidc_client;
 
 import android.app.Application;
 
@@ -22,10 +22,8 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
-            new AsyncStoragePackage()
-      );
+      return Arrays.<ReactPackage>asList(new MainReactPackage(),
+            new AsyncStoragePackage());
     }
 
     @Override

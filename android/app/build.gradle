@@ -102,7 +102,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.reactNativeOidcClient"
+        applicationId "com.react_native_oidc_client"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

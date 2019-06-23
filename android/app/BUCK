@@ -35,12 +35,12 @@ android_library(
 
 android_build_config(
     name = "build_config",
-    package = "com.reactNativeOidcClient",
+    package = "com.react_native_oidc_client",
 )
 
 android_resource(
     name = "res",
-    package = "com.reactNativeOidcClient",
+    package = "com.react_native_oidc_client",
     res = "src/main/res",
 )
 
