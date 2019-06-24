@@ -48,6 +48,8 @@
     "jest": "24.8.0",
     "metro-react-native-babel-preset": "^0.54.1",
     "prettier": "^1.17.1",
+    "react": "^16.8.6",
+    "react-native": "^0.59.9",
     "react-test-renderer": "16.8.6"
   },
   "jest": {

@@ -44,14 +44,6 @@ export default class App extends Component<Props> {
                 token_endpoint_auth_method: 'client_secret_post',
             }
         );
-        // console.log('DOING');
-        // const client = await fetch('https://con-023.contact.de', {
-        //     method: 'GET',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         Accept: 'application/json',
-        //     },
-        // });
         console.log('Client config', clientCredentials);
 
         const config = {
