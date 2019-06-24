@@ -33,7 +33,7 @@ export default class RequestService {
                           method: 'GET',
                           headers: {
                               'Content-Type': 'application/json',
-                              authorization: `Bearer ${token}`,
+                              Authorization: `Bearer ${token}`,
                           },
                       }
                     : {

@@ -34,7 +34,6 @@ export default class MetadataService {
                 }
             }
         }
-
         return this._metadataUrl;
     }
 
@@ -55,11 +54,16 @@ export default class MetadataService {
 
         Log.debug('getting metadata from', this.metadataUrl);
 
-        return this._requestService.getJson(this.metadataUrl).then(metadata => {
-            Log.debug('json received');
-            this._config.metadata = metadata;
-            return metadata;
-        });
+        return this._requestService
+            .getJson(this.metadataUrl)
+            .then(metadata => {
+                Log.debug('json received');
+                this._config.metadata = metadata;
+                return metadata;
+            })
+            .catch(error =>
+                Log.error('getMetadata: Error in receiving meta data:', error)
+            );
     }
 
     getIssuer() {
@@ -80,6 +84,11 @@ export default class MetadataService {
     getTokenEndpoint() {
         Log.debug('MetadataService.getTokenEndpoint');
         return this._getMetadataProperty('token_endpoint', true);
+    }
+
+    getRegistrationEndpoint() {
+        Log.debug('MetadataService.getRegistrationEndpoint');
+        return this._getMetadataProperty('registration_endpoint');
     }
 
     getCheckSessionIframe() {

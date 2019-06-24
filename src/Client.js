@@ -10,6 +10,7 @@ import StateStore from './StateStore';
 import AuthorizationCodeResponse from './AuthorizationCodeResponse';
 import UrlUtility from './UrlUtility';
 import AccessTokenGrant from './AccessTokenGrant';
+import ClientRegistrationRequest from './ClientRegistrationRequest';
 import RedirectNavigator from './RedirectNavigator';
 import RefreshTokenService from './RefreshTokenService';
 
@@ -56,6 +57,49 @@ export default class Client {
     }
     set waitForAuthorization(resolver) {
         this._waitForAuthorization = resolver;
+    }
+
+    static async register(authority_url, options) {
+        const registrationRequest = new ClientRegistrationRequest(
+            authority_url,
+            options
+        );
+
+        try {
+            await registrationRequest.prepare();
+        } catch (error) {
+            Log.info(
+                `register: Client registration failed during preparation ${error}`
+            );
+        }
+        try {
+            const registrationInfo = await registrationRequest.request();
+            Log.debug('register client info', registrationInfo);
+
+            return registrationRequest.getClientCredentials();
+        } catch (error) {
+            Log.info(
+                `register: Client registration failed during request ${error}`
+            );
+        }
+    }
+
+    isClientExpired() {
+        if (!this.config.registration_info) {
+            Log.debug(
+                'isClientExpired: No registration info for client so it should be static'
+            );
+            return false;
+        }
+        if (!this.config.registration_info.client_secret_expires_at) {
+            Log.debug('isClientExpired: No expiration time for client secret.');
+            return false;
+        }
+        // timestamp in seconds
+        return (
+            Date.now() / 1000 >
+            this.config.registration_info.client_secret_expires_at
+        );
     }
 
     async authorize(authorizationInfo) {

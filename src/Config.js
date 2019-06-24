@@ -27,6 +27,7 @@ export default class Config {
         scope = DefaultScope,
         redirect_uri,
         post_logout_redirect_uri,
+        registration_info,
         // optional protocol
         prompt,
         display,
@@ -60,6 +61,7 @@ export default class Config {
         this._scope = scope;
         this._redirect_uri = redirect_uri;
         this._post_logout_redirect_uri = post_logout_redirect_uri;
+        this._registration_info = registration_info;
 
         this._prompt = prompt;
         this._display = display;
@@ -146,6 +148,9 @@ export default class Config {
     }
     get post_logout_redirect_uri() {
         return this._post_logout_redirect_uri;
+    }
+    get registration_info() {
+        return this._registration_info;
     }
 
     // optional protocol params
