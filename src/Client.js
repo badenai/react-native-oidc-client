@@ -59,9 +59,13 @@ export default class Client {
         this._waitForAuthorization = resolver;
     }
 
-    static async register(authority_url, options) {
+    async register(options) {
+        if (this.config.registration_info) {
+            // when the client is still valid return
+            if (!this.isClientExpired) return Promise.resolve();
+        }
         const registrationRequest = new ClientRegistrationRequest(
-            authority_url,
+            this.config.authority,
             options
         );
 
@@ -75,8 +79,16 @@ export default class Client {
         try {
             const registrationInfo = await registrationRequest.request();
             Log.debug('register client info', registrationInfo);
-
-            return registrationRequest.getClientCredentials();
+            Log.debug('Setting client registration info');
+            this.config.registration_info = registrationInfo;
+            Log.debug('Setting client credentials');
+            const {
+                client_id,
+                client_secret,
+            } = registrationRequest.getClientCredentials();
+            this.config.client_id = client_id;
+            this.config.client_secret = client_secret;
+            return Promise.resolve();
         } catch (error) {
             Log.info(
                 `register: Client registration failed during request ${error}`

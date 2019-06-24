@@ -126,16 +126,13 @@ export default class Config {
         return this._client_id;
     }
     set client_id(value) {
-        if (!this._client_id) {
-            // one-time set only
-            this._client_id = value;
-        } else {
-            Log.error('client_id has already been assigned.');
-            throw new Error('client_id has already been assigned.');
-        }
+        this._client_id = value;
     }
     get client_secret() {
         return this._client_secret;
+    }
+    set client_secret(value) {
+        this._client_secret = value;
     }
     get response_type() {
         return this._response_type;
@@ -151,6 +148,9 @@ export default class Config {
     }
     get registration_info() {
         return this._registration_info;
+    }
+    set registration_info(value) {
+        this._registration_info = value;
     }
 
     // optional protocol params

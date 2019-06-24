@@ -36,16 +36,6 @@ export default class App extends Component<Props> {
     };
 
     register = async () => {
-        const clientCredentials = await Client.register(
-            'https://con-023.contact.de/oidc',
-            {
-                redirect_uris: ['https://com.example'],
-                application_type: 'web',
-                token_endpoint_auth_method: 'client_secret_post',
-            }
-        );
-        console.log('Client config', clientCredentials);
-
         const config = {
             response_type: 'code',
             scope: 'openid profile offline_access',
@@ -56,7 +46,12 @@ export default class App extends Component<Props> {
             authority: 'https://con-023.contact.de/oidc',
         };
 
-        const client = new Client({ ...config, ...clientCredentials });
+        const client = new Client(config);
+        await client.register({
+            redirect_uris: ['https://com.example'],
+            application_type: 'web',
+            token_endpoint_auth_method: 'client_secret_post',
+        });
         const tokenResponse = await client.authorize();
         console.log('TOKEN', tokenResponse);
     };

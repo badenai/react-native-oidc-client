@@ -21,7 +21,14 @@ export default class ClientRegistrationRequest {
             authority: this.authority_url,
         });
         Log.debug('Client registration getting metadata');
-        this.registrationEndpoint = await metadataService.getRegistrationEndpoint();
+        try {
+            this.registrationEndpoint = await metadataService.getRegistrationEndpoint();
+        } catch (error) {
+            Log.info(
+                `Client registration can not obtain registration endpoint`
+            );
+            throw new Error(error);
+        }
 
         Log.debug(`Client registration endpoint ${this.registrationEndpoint}`);
         if (!this.registrationEndpoint || this.registrationEndpoint === '')
