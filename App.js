@@ -35,7 +35,41 @@ export default class App extends Component<Props> {
         console.log('TOKEN', tokenResponse);
     };
 
-    render() {
+    register = async () => {
+        const clientCredentials = await Client.register(
+            'https://con-023.contact.de/oidc',
+            {
+                redirect_uris: ['https://com.example'],
+                application_type: 'web',
+                token_endpoint_auth_method: 'client_secret_post',
+            }
+        );
+        // console.log('DOING');
+        // const client = await fetch('https://con-023.contact.de', {
+        //     method: 'GET',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         Accept: 'application/json',
+        //     },
+        // });
+        console.log('Client config', clientCredentials);
+
+        const config = {
+            response_type: 'code',
+            scope: 'openid profile offline_access',
+            redirect_uri: 'https://com.example',
+            acr_values: 'http://oidc.contact.de',
+            acr: 'default',
+            prompt: 'consent login',
+            authority: 'https://con-023.contact.de/oidc',
+        };
+
+        const client = new Client({ ...config, ...clientCredentials });
+        const tokenResponse = await client.authorize();
+        console.log('TOKEN', tokenResponse);
+    };
+
+    render = () => {
         return (
             <View style={styles.container}>
                 <RedirectComponent />
@@ -46,13 +80,19 @@ export default class App extends Component<Props> {
                         this.doIt();
                     }}
                 />
+                <Button
+                    title={'register'}
+                    onPress={() => {
+                        this.register();
+                    }}
+                />
                 <Text style={styles.instructions}>
                     To get started, edit App.js
                 </Text>
                 <Text style={styles.instructions}>{instructions}</Text>
             </View>
         );
-    }
+    };
 }
 
 const styles = StyleSheet.create({
