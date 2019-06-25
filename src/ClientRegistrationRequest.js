@@ -68,7 +68,6 @@ export default class ClientRegistrationRequest {
                 'getAuthConfig: no registrationInfo. Make a request first'
             );
         const { client_id, client_secret } = this.registrationInfo;
-        console.log('CREDS', client_id, client_secret);
         if (!client_id || !client_secret)
             throw new Error('getAuthConfig: Invalid client credentials');
 

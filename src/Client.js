@@ -86,6 +86,8 @@ export default class Client {
                 client_id,
                 client_secret,
             } = registrationRequest.getClientCredentials();
+
+            // set dynamically received client id and secret
             this.config.client_id = client_id;
             this.config.client_secret = client_secret;
             return Promise.resolve();
@@ -317,8 +319,6 @@ export default class Client {
         return this.stateStore.remove(key);
     }
 
-    // static way to retrieve the access token for a given configuration
-    // just pass a config object
     async getToken() {
         const key = this.tokenKey;
         Log.debug(`Client.getAccessToken with key ${key}`);
