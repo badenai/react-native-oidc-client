@@ -30,6 +30,7 @@ class RedirectComponent extends Component {
         const url = event.hasOwnProperty('url') ? event.url : event;
         try {
             const client = Client.restore();
+            MyAPI.CEClient = client;
 
             if (url && url.startsWith(client.config.redirect_uri)) {
                 Log.debug(`RedirectComponent: handle url ${url}`);
