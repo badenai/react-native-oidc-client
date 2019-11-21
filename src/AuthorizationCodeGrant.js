@@ -17,7 +17,6 @@ export default class AuthorizationCodeGrant extends AuthorizationGrant {
             response_type: 'code',
             redirect_uri: this.config._redirect_uri,
             client_id: this.config._client_id,
-            client_secret: this.config._client_secret,
             scope: this.config._scope,
             display: this.config._display,
             prompt: this.config._prompt,
