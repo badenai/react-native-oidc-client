@@ -9,6 +9,8 @@ import RedirectComponent from './RedirectComponent';
 // Config types
 import Config from './Config';
 import AmazonConfig from './OidcProvider/Amazon/AmazonConfig';
+import FacebookConfig from './OidcProvider/Facebook/FacebookConfig';
+import GoogleConfig from './OidcProvider/Google/GoogleConfig';
 
 import Client from './Client';
 import JoseUtil from './JoseUtil';
@@ -20,6 +22,8 @@ module.exports = {
     // Config types
     Config,
     AmazonConfig,
+    FacebookConfig,
+    GoogleConfig,
     // Business objects
     Client,
     JoseUtil,
