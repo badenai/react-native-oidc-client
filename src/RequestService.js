@@ -19,6 +19,11 @@ export default class RequestService {
         });
     }
 
+    fixTrailingCommaInJsonString(input) {
+        const regex = /\,(?!\s*?[\{\[\"\'\w])/g;
+        return input.replace(regex, '');
+    }
+
     async getJson(url, token) {
         Log.debug('RequestService.getJson', url);
 
@@ -43,14 +48,27 @@ export default class RequestService {
                           },
                       };
                 const req = await fetch(url, options);
-                Log.debug('HTTP response received, status', req.status);
-
+                // clone in case we can not extract valid JSON
+                const cloneResponse = req.clone();
                 if (req.status === 200) {
                     try {
                         resolve(await req.json());
                     } catch (e) {
-                        Log.error('Error parsing JSON response', e.message);
-                        reject(e);
+                        try {
+                            Log.debug(
+                                'Error parsing JSON response. Try to convert it.',
+                                e.message
+                            );
+                            const data = await cloneResponse.text();
+                            resolve(
+                                JSON.parse(
+                                    this.fixTrailingCommaInJsonString(data)
+                                )
+                            );
+                        } catch (e) {
+                            Log.error('Error parsing JSON response', e.message);
+                            reject(e);
+                        }
                     }
                 } else {
                     reject(Error(req.statusText + ' (' + req.status + ')'));
