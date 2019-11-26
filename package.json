@@ -2,7 +2,7 @@
   "name": "react-native-oidc-client",
   "version": "1.2.0",
   "author": "dba <dba.developing@gmail.com>",
-  "main": "./src/index.js",
+  "main": "./distribution/index.js",
   "scripts": {
     "build": "babel src --out-dir distribution",
     "prepublish": "npm run build",
