@@ -50,8 +50,8 @@ export default class Global {
     static get stateKey() {
         return 'STATE.';
     }
-    static accessTokenKey(authority, client_id) {
-        return `at:${authority}:${client_id}`;
+    static accessTokenKey(authority) {
+        return `at:${authority}`;
     }
 
     static AUTHORIZATION_FLOWS = {

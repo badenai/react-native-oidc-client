@@ -298,8 +298,8 @@ export default class Client {
     }
 
     get tokenKey() {
-        const { authority, client_id } = this.config;
-        return encodeURI(Global.accessTokenKey(authority, client_id));
+        const { authority } = this.config;
+        return encodeURI(Global.accessTokenKey(authority));
     }
 
     async storeToken(token) {
