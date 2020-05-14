@@ -49,7 +49,11 @@ export default class Config {
         AccessTokenGrantCtor = AccessTokenGrant,
         // extra query params
         extraQueryParams = {},
+        // storage
+        storage,
     } = {}) {
+        if (!storage)
+            throw new Error('Please provide a storage in your config');
         this._authority = authority;
         this._metadataUrl = metadataUrl;
         this._metadata = metadata;
@@ -75,7 +79,7 @@ export default class Config {
         this._staleStateAge = staleStateAge;
         this._clockSkew = clockSkew;
 
-        this._stateStore = new StateStore();
+        this._stateStore = new StateStore(storage);
         this._validator = new ResponseValidatorCtor(this);
         this._metadataService = new MetadataServiceCtor(this);
         this._requestService = new RequestServiceCtor();
@@ -107,7 +111,7 @@ export default class Config {
         });
     };
 
-    static fromStorageString = configJSON => {
+    static fromStorageString = (configJSON) => {
         const config = JSON.parse(configJSON);
         if (config) {
             return Object.assign(new Config(), config);

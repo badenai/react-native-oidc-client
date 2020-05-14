@@ -1,10 +1,8 @@
-import AsyncStorage from '@react-native-community/async-storage';
-
 const timer = {
-    setInterval: function(cb, duration) {
+    setInterval: function (cb, duration) {
         return setInterval(cb, duration);
     },
-    clearInterval: function(handle) {
+    clearInterval: function (handle) {
         return clearInterval(handle);
     },
 };
@@ -20,18 +18,6 @@ export default class Global {
     static get location() {
         if (!testing) {
             return location;
-        }
-    }
-
-    static get storage() {
-        if (!testing) {
-            return AsyncStorage;
-        }
-    }
-
-    static get sessionStorage() {
-        if (!testing) {
-            return AsyncStorage;
         }
     }
 

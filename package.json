@@ -14,7 +14,6 @@
     "url": "https://github.com/dbadeveloping/react-native-oidc-client"
   },
   "dependencies": {
-    "@react-native-community/async-storage": "^1.9.0",
     "jsrsasign": "^8.0.13"
   },
   "keywords": [
