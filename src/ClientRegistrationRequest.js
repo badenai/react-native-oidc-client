@@ -1,6 +1,4 @@
 import Log from './Log';
-import Global from './Global';
-import UrlUtility from './UrlUtility';
 import MetadataService from './MetadataService';
 
 export default class ClientRegistrationRequest {

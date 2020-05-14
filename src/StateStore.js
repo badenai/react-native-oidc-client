@@ -3,7 +3,7 @@ import Global from './Global';
 import Config from './Config';
 
 export default class StateStore {
-    constructor(store = Global.storage) {
+    constructor(store) {
         this._store = store;
         this._prefix = Global.storeKeyPrefix;
     }
@@ -15,13 +15,13 @@ export default class StateStore {
         return this._store.setItem(key, value);
     };
 
-    get = key => {
+    get = (key) => {
         key = this._prefix + key;
         Log.debug('StateStore.get', key);
         return this._store.getItem(key);
     };
 
-    remove = key => {
+    remove = (key) => {
         key = this._prefix + key;
         Log.debug('StateStore.remove', key);
 
@@ -37,7 +37,7 @@ export default class StateStore {
         return this._store.getAllKeys();
     };
 
-    storeClientConfiguration = async config => {
+    storeClientConfiguration = async (config) => {
         if (config instanceof Config) {
             Log.debug('StateStore store config');
             // store the config
