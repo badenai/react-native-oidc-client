@@ -4975,10 +4975,10 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
-jsrsasign@^8.0.13:
-  version "8.0.13"
-  resolved "https://registry.yarnpkg.com/jsrsasign/-/jsrsasign-8.0.13.tgz#e9ac95965c61f9e17d0bf5f9b5af2dd9f9c5e22b"
-  integrity sha512-sy8rk/6IQf9pDb8A0ZTbLmEdxUVkhhXfhmfVawS9cBOZqZJeYuSQ1zG9yO+cB8LORfj/iBM2r856Lxu+uLJYnA==
+jsrsasign@^8.0.19:
+  version "8.0.19"
+  resolved "https://registry.yarnpkg.com/jsrsasign/-/jsrsasign-8.0.19.tgz#c36260f103cc639a9202e5243d7544cde48d53a7"
+  integrity sha512-qf+F41huTh9ThXj5n3yfAJJRp8vx05JYbGlGvCjusYX50rsfqY6ASK08LCOutl0yA1BHIpGG8bd1w5x9aGy7Zg==
 
 jsx-ast-utils@^2.2.3:
   version "2.2.3"
