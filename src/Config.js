@@ -28,6 +28,7 @@ export default class Config {
         redirect_uri,
         post_logout_redirect_uri,
         registration_info,
+        browser_type = 'default',
         // optional protocol
         prompt,
         display,
@@ -66,6 +67,7 @@ export default class Config {
         this._redirect_uri = redirect_uri;
         this._post_logout_redirect_uri = post_logout_redirect_uri;
         this._registration_info = registration_info;
+        this._browser_type = browser_type;
 
         this._prompt = prompt;
         this._display = display;
@@ -155,6 +157,12 @@ export default class Config {
     }
     set registration_info(value) {
         this._registration_info = value;
+    }
+    get browser_type() {
+        return this._browser_type;
+    }
+    set browser_type(value) {
+        this._browser_type = value;
     }
 
     // optional protocol params

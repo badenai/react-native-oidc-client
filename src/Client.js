@@ -23,6 +23,7 @@ export default class Client {
         } else {
             this._config = new Config(config);
         }
+        RedirectNavigator.browser_type = this._config.browser_type;
         this._navigator = new RedirectNavigator();
         this._refreshTokenService = new RefreshTokenService(this.config);
     }
@@ -123,7 +124,7 @@ export default class Client {
 
         if (
             authorizationCodeFlow ===
-                Global.AUTHORIZATION_FLOWS.AUTHORIZATION_CODE ||
+            Global.AUTHORIZATION_FLOWS.AUTHORIZATION_CODE ||
             authorizationCodeFlow === Global.AUTHORIZATION_FLOWS.IMPLICIT
         ) {
             Log.debug(`Client.authorizationGrant`);

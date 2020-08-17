@@ -53,7 +53,8 @@
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "react-native-inappbrowser-reborn": "^3.4.0"
   },
   "jest": {
     "preset": "react-native"
