@@ -21,6 +21,7 @@ const config = {
         acr: 'default',
         prompt: 'consent login',
         authority: 'https://youroidcprovider',
+        browser_type: 'default',
     };
 ```
 
@@ -63,4 +64,7 @@ Add to you main ``<Activity>`` in your ``AndroidManifest.xml`` an ``<intent-filt
 
 ##### IOS:
 Coming soon.
+
+#### Browser Behaviour
+By default, a separate browser window will be opened for the login. You can change this to open the browser inside your app by installing the [InAppBrowser for React Native](https://www.npmjs.com/package/react-native-inappbrowser-reborn) and setting the `browser_type` field of your config to `inapp`.  
 

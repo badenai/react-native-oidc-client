@@ -29,6 +29,7 @@ export default class App extends Component<Props> {
             acr: 'default',
             prompt: 'consent login',
             authority: 'https://youroidcprovider',
+            browser_type: 'default',
         };
         const client = new Client(config);
         const tokenResponse = await client.authorize();
