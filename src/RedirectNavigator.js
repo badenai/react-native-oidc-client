@@ -1,6 +1,7 @@
-import { Linking } from 'react-native';
+import { Linking, Platform } from 'react-native';
 
 import Log from './Log';
+import Global from './Global';
 
 let InAppBrowser;
 try {
@@ -13,45 +14,43 @@ try {
 }
 
 export default class RedirectNavigator {
-
     // must be set from config
     static browser_type = '';
 
-    static async navigate(url) {
+    static async navigate(url, redirectUri) {
         Log.debug('RedirectNavigator.navigate');
 
         if (!url) {
             Log.error('No url provided');
             return Promise.reject(new Error('No url provided'));
         }
-
         try {
             if (
-                this.browser_type == 'inapp' &&
+                this.browser_type == Global.BROWSER_TYPES.INAPPBROWSER &&
                 (await InAppBrowser.isAvailable())
             ) {
-                return InAppBrowser.openAuth(url, {
-                    // iOS Properties
-                    dismissButtonStyle: 'cancel',
-                    readerMode: false,
-                    animated: true,
-                    modalPresentationStyle: 'fullScreen',
-                    modalTransitionStyle: 'partialCurl',
-                    modalEnabled: true,
-                    enableBarCollapsing: false,
-                    // Android Properties
-                    showTitle: true,
-                    enableUrlBarHiding: true,
-                    forceCloseOnRedirection: false,
-                    // Animation
-                    animations: {
-                        startEnter: 'slide_in_right',
-                        startExit: 'slide_out_left',
-                        endEnter: 'slide_in_left',
-                        endExit: 'slide_out_right',
-                    },
-                });
-            } else if (this.browser_type == 'default') {
+                const responsePromise = InAppBrowser.openAuth(
+                    url,
+                    redirectUri,
+                    {
+                        // iOS Properties
+                        ephemeralWebSession: true,
+                        // Android Properties
+                        showTitle: false,
+                        enableUrlBarHiding: true,
+                        enableDefaultShare: false,
+                    }
+                );
+                if (Platform.OS === 'ios') {
+                    const response = await responsePromise;
+                    if (response.type === 'success' && response.url) {
+                        Linking.openURL(response.url);
+                    }
+                }
+                return responsePromise;
+            } else if (
+                this.browser_type == Global.BROWSER_TYPES.SYSTEMBROWSER
+            ) {
                 return Linking.openURL(url);
             } else {
                 throw new Error(
