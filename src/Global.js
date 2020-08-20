@@ -39,10 +39,4 @@ export default class Global {
     static accessTokenKey(authority) {
         return `at:${authority}`;
     }
-
-    static AUTHORIZATION_FLOWS = {
-        AUTHORIZATION_CODE: 'AUTHORIZATION_CODE',
-        IMPLICIT: 'IMPLICIT',
-        CLIENT_CREDENTIAL: 'CLIENT_CREDENTIAL',
-    };
 }

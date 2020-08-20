@@ -1,6 +1,7 @@
 import Log from './Log';
 import Global from './Global';
 import Config from './Config';
+import { AUTHORIZATION_FLOWS } from './Constants';
 import RequestHandler from './RequestHandler';
 import Token from './Token';
 import EndSessionRequest from './EndSessionRequest';
@@ -123,21 +124,19 @@ export default class Client {
         );
 
         if (
-            authorizationCodeFlow ===
-            Global.AUTHORIZATION_FLOWS.AUTHORIZATION_CODE ||
-            authorizationCodeFlow === Global.AUTHORIZATION_FLOWS.IMPLICIT
+            authorizationCodeFlow === AUTHORIZATION_FLOWS.AUTHORIZATION_CODE ||
+            authorizationCodeFlow === AUTHORIZATION_FLOWS.IMPLICIT
         ) {
             Log.debug(`Client.authorizationGrant`);
             await this.authorizationGrant.prepare(authorizationInfo);
             Log.debug(`Call authorize with ${this.authorizationGrant.url}`);
             this.store();
             await this.authorizationGrant.request();
-            return new Promise(resolve => {
+            return new Promise((resolve) => {
                 this.waitForAuthorization = resolve;
             });
         } else if (
-            authorizationCodeFlow ===
-            Global.AUTHORIZATION_FLOWS.CLIENT_CREDENTIAL
+            authorizationCodeFlow === AUTHORIZATION_FLOWS.CLIENT_CREDENTIAL
         ) {
             throw new Error(
                 `Client.authorize ClientCredential flow is currently not supported.`
@@ -188,7 +187,7 @@ export default class Client {
             if (authorizationState) {
                 if (
                     authorizationState.authorization_flow ===
-                    Global.AUTHORIZATION_FLOWS.AUTHORIZATION_CODE
+                    AUTHORIZATION_FLOWS.AUTHORIZATION_CODE
                 ) {
                     const authorizationCodeResponse = new AuthorizationCodeResponse(
                         values
@@ -215,7 +214,7 @@ export default class Client {
                 }
                 if (
                     authorizationState.authorization_flow ===
-                    Global.AUTHORIZATION_FLOWS.IMPLICIT
+                    AUTHORIZATION_FLOWS.IMPLICIT
                 ) {
                     tokenResponse = await this.handleTokenResponse(
                         authorizationState,
@@ -224,7 +223,7 @@ export default class Client {
                 }
                 if (
                     authorizationState.authorization_flow ===
-                    Global.AUTHORIZATION_FLOWS.CLIENT_CREDENTIAL
+                    AUTHORIZATION_FLOWS.CLIENT_CREDENTIAL
                 ) {
                     throw Error(
                         `Client.handleRedirect ClientCredential flow is currently not supported.`

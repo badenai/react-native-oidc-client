@@ -1,12 +1,5 @@
 import Log from './Log';
-import UrlUtility from './UrlUtility';
-import AuthorizeState from './AuthorizationState';
-
-export const AUTHORIZATION_FLOWS = {
-    AUTHORIZATION_CODE: 'AUTHORIZATION_CODE',
-    IMPLICIT: 'IMPLICIT',
-    CLIENT_CREDENTIAL: 'CLIENT_CREDENTIAL',
-};
+import { AUTHORIZATION_FLOWS } from './Constants';
 
 export default class RequestHandler {
     constructor({ response_type, grant_type }) {

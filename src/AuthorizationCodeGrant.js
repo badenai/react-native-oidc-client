@@ -1,5 +1,5 @@
 import Log from './Log';
-import Global from './Global';
+import { AUTHORIZATION_FLOWS } from './Constants';
 import AuthorizeState from './AuthorizationState';
 import AuthorizationGrant from './AuthorizationGrant';
 import UrlUtility from './UrlUtility';
@@ -28,7 +28,7 @@ export default class AuthorizationCodeGrant extends AuthorizationGrant {
         });
 
         if (this.config.extraQueryParams) {
-            Object.keys(this.config.extraQueryParams).map(key => {
+            Object.keys(this.config.extraQueryParams).map((key) => {
                 requestParams[key] = this.config.extraQueryParams[key];
             });
         }
@@ -54,7 +54,7 @@ export default class AuthorizationCodeGrant extends AuthorizationGrant {
             nonce: oidc,
             client_id: requestParams.client_id,
             authority: this.config.authority,
-            authorization_flow: Global.AUTHORIZATION_FLOWS.AUTHORIZATION_CODE,
+            authorization_flow: AUTHORIZATION_FLOWS.AUTHORIZATION_CODE,
         });
         requestParams.nonce = this.state.nonce;
         requestParams.state = this.state.id;
@@ -67,7 +67,10 @@ export default class AuthorizationCodeGrant extends AuthorizationGrant {
                 this.state.id,
                 this.state.toStorageString()
             );
-            return RedirectNavigator.navigate(this.url);
+            return RedirectNavigator.navigate(
+                this.url,
+                this.config.redirect_uri
+            );
         } catch (err) {
             throw Error(`Navigating to ${this.url} failed.`);
         }

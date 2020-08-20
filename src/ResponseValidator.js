@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 import Log from './Log';
-import Global from './Global';
+import { AUTHORIZATION_FLOWS } from './Constants';
 import MetadataService from './MetadataService';
 import UserInfoService from './UserInfoService';
 import ErrorResponse from './ErrorResponse';
@@ -140,7 +140,7 @@ export default class ResponseValidator {
             // It is not necessary to check the state for the authorization code flow
             // again. We did that already.
             state.authorization_flow !==
-                Global.AUTHORIZATION_FLOWS.AUTHORIZATION_CODE &&
+                AUTHORIZATION_FLOWS.AUTHORIZATION_CODE &&
             state.id !== response.state
         ) {
             Log.error('State does not match');
@@ -225,7 +225,7 @@ export default class ResponseValidator {
 
                 return this._userInfoService
                     .getClaims(response.access_token)
-                    .then(claims => {
+                    .then((claims) => {
                         Log.debug(
                             'user info claims received from user info endpoint'
                         );
@@ -297,7 +297,7 @@ export default class ResponseValidator {
         var result = Object.assign({}, claims);
 
         if (this._config._filterProtocolClaims) {
-            ProtocolClaims.forEach(type => {
+            ProtocolClaims.forEach((type) => {
                 delete result[type];
             });
 
@@ -329,7 +329,7 @@ export default class ResponseValidator {
     _validateIdTokenAndAccessToken(state, response) {
         Log.debug('ResponseValidator._validateIdTokenAndAccessToken');
 
-        return this._validateIdToken(state, response).then(response => {
+        return this._validateIdToken(state, response).then((response) => {
             return this._validateAccessToken(state, response);
         });
     }
@@ -354,10 +354,10 @@ export default class ResponseValidator {
 
         var kid = jwt.header.kid;
 
-        return this._metadataService.getIssuer().then(issuer => {
+        return this._metadataService.getIssuer().then((issuer) => {
             Log.debug('Received issuer');
 
-            return this._metadataService.getSigningKeys().then(keys => {
+            return this._metadataService.getSigningKeys().then((keys) => {
                 if (!keys) {
                     Log.error('No signing keys from metadata');
                     return Promise.reject(
@@ -385,7 +385,7 @@ export default class ResponseValidator {
                         key = keys[0];
                     }
                 } else {
-                    key = keys.filter(key => {
+                    key = keys.filter((key) => {
                         return key.kid === kid;
                     })[0];
                 }
@@ -452,7 +452,7 @@ export default class ResponseValidator {
 
         Log.debug('Looking for keys that match kty: ', kty);
 
-        keys = keys.filter(key => {
+        keys = keys.filter((key) => {
             return key.kty === kty;
         });
 
@@ -472,8 +472,7 @@ export default class ResponseValidator {
         // Access token validation with at_hash is optional for authorization code flow
         if (
             response.profile.at_hash ||
-            state.authorization_flow !==
-                Global.AUTHORIZATION_FLOWS.AUTHORIZATION_CODE
+            state.authorization_flow !== AUTHORIZATION_FLOWS.AUTHORIZATION_CODE
         ) {
             if (!response.profile.at_hash) {
                 Log.error('No at_hash in id_token');
