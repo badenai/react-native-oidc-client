@@ -1,5 +1,5 @@
 import Log from './Log';
-import Global from './Global';
+import { AUTHORIZATION_FLOWS } from './Constants';
 import AuthorizeState from './AuthorizationState';
 import AuthorizationGrant from './AuthorizationGrant';
 import UrlUtility from './UrlUtility';
@@ -28,7 +28,7 @@ export default class ImplicitGrant extends AuthorizationGrant {
         });
 
         if (this.config.extraQueryParams) {
-            Object.keys(this.config.extraQueryParams).map(key => {
+            Object.keys(this.config.extraQueryParams).map((key) => {
                 requestParams[key] = this.config.extraQueryParams[key];
             });
         }
@@ -47,7 +47,7 @@ export default class ImplicitGrant extends AuthorizationGrant {
             nonce: oidc,
             client_id: requestParams.client_id,
             authority: this.config.authority,
-            authorization_flow: Global.AUTHORIZATION_FLOWS.IMPLICIT,
+            authorization_flow: AUTHORIZATION_FLOWS.IMPLICIT,
         });
 
         requestParams.nonce = this.state.nonce;

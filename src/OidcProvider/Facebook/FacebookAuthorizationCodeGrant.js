@@ -1,4 +1,4 @@
-import Global from './../../Global';
+import { AUTHORIZATION_FLOWS } from './../../Constants';
 import RedirectNavigator from './../../RedirectNavigator';
 import AuthorizeState from './../../AuthorizationState';
 import AuthorizationCodeGrant from '../../AuthorizationCodeGrant';
@@ -9,7 +9,7 @@ export default class FacebookAuthorizationCodeGrant extends AuthorizationCodeGra
             nonce: undefined,
             client_id: requestParams.client_id,
             authority: this.config.authority,
-            authorization_flow: Global.AUTHORIZATION_FLOWS.AUTHORIZATION_CODE,
+            authorization_flow: AUTHORIZATION_FLOWS.AUTHORIZATION_CODE,
         });
         requestParams.state = this.state.id;
         return requestParams;

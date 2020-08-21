@@ -11,12 +11,12 @@ class RedirectComponent extends Component {
 
     componentDidMount() {
         Linking.getInitialURL()
-            .then(ev => {
+            .then((ev) => {
                 if (ev) {
                     this._handleOpenURL(ev);
                 }
             })
-            .catch(err => {
+            .catch((err) => {
                 console.warn('An error occurred', err);
             });
         Linking.addEventListener('url', this._handleOpenURL);
@@ -26,7 +26,7 @@ class RedirectComponent extends Component {
         Linking.removeEventListener('url', this._handleOpenURL);
     }
 
-    _handleOpenURL = event => {
+    _handleOpenURL = (event) => {
         const url = event.hasOwnProperty('url') ? event.url : event;
         try {
             const client = Client.restore();
