@@ -13,10 +13,12 @@ import FacebookConfig from './OidcProvider/Facebook/FacebookConfig';
 import GoogleConfig from './OidcProvider/Google/GoogleConfig';
 
 import Client from './Client';
+import * as Constants from './Constants';
 import JoseUtil from './JoseUtil';
 import Token from './Token';
 
 module.exports = {
+    Constants,
     // RedirectComponents
     RedirectComponent,
     // Config types
