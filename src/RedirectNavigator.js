@@ -1,7 +1,7 @@
 import { Linking, Platform } from 'react-native';
 
 import Log from './Log';
-import Global from './Global';
+import { BROWSER_TYPES } from './Constants';
 
 let InAppBrowser;
 try {
@@ -26,7 +26,7 @@ export default class RedirectNavigator {
         }
         try {
             if (
-                this.browser_type == Global.BROWSER_TYPES.INAPPBROWSER &&
+                this.browser_type == BROWSER_TYPES.INAPPBROWSER &&
                 (await InAppBrowser.isAvailable())
             ) {
                 const responsePromise = InAppBrowser.openAuth(
@@ -48,9 +48,7 @@ export default class RedirectNavigator {
                     }
                 }
                 return responsePromise;
-            } else if (
-                this.browser_type == Global.BROWSER_TYPES.SYSTEMBROWSER
-            ) {
+            } else if (this.browser_type == BROWSER_TYPES.SYSTEMBROWSER) {
                 return Linking.openURL(url);
             } else {
                 throw new Error(
