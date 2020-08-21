@@ -1,5 +1,5 @@
 import Log from './Log';
-import Global from './Global';
+import { BROWSER_TYPES } from './Constatns';
 import StateStore from './StateStore';
 import ResponseValidator from './ResponseValidator';
 import MetadataService from './MetadataService';
@@ -29,7 +29,7 @@ export default class Config {
         redirect_uri,
         post_logout_redirect_uri,
         registration_info,
-        browser_type = Global.BROWSER_TYPES.SYSTEMBROWSER,
+        browser_type = BROWSER_TYPES.SYSTEMBROWSER,
         // optional protocol
         prompt,
         display,
