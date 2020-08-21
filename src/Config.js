@@ -1,5 +1,5 @@
 import Log from './Log';
-import { BROWSER_TYPES } from './Constatns';
+import { BROWSER_TYPES } from './Constants';
 import StateStore from './StateStore';
 import ResponseValidator from './ResponseValidator';
 import MetadataService from './MetadataService';
