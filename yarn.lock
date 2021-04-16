@@ -5246,10 +5246,10 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
-jsrsasign@^9.0.1:
-  version "9.0.1"
-  resolved "https://registry.yarnpkg.com/jsrsasign/-/jsrsasign-9.0.1.tgz#ef62b757eace3b2127142adaba7a3c26e2487307"
-  integrity sha512-DRPZ75Y+G0O1zWKQkevkr0ENBYl7nb39/112lXzBgzoaeiUkGXpRfk+FbRCusowG6MvpInOwEmZ3IWU9VI4w3w==
+jsrsasign@^10.2.0:
+  version "10.2.0"
+  resolved "https://registry.yarnpkg.com/jsrsasign/-/jsrsasign-10.2.0.tgz#960ab8046d19d3fcbb584368a57d1977cb0b7ffd"
+  integrity sha512-khMrV/10U02DRzmXhjuLQjddUF39GHndaJZ/3YiiKkbyEl1T5M6EQF9nQUq0DFVCHusmd/jl8TWl4mWt+1L5hg==
 
 jsx-ast-utils@^2.4.1:
   version "2.4.1"

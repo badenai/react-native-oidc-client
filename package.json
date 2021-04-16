@@ -14,7 +14,7 @@
     "url": "https://github.com/dbadeveloping/react-native-oidc-client"
   },
   "dependencies": {
-    "jsrsasign": "^9.0.1"
+    "jsrsasign": "^10.2.0"
   },
   "keywords": [
     "api",
